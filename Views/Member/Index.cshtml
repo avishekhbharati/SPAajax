@@ -1,0 +1,69 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Members</h2>
+
+<form id="MyForm">
+    <input type="hidden" readonly id="ID" name="ID" />
+    <input type="text" id="Name" name="Name" />
+    <input type="text" id="age" name="age" />
+    <input type="button" id="btnAdd" value="SAVE" onclick="Add() " />
+</form>
+
+<br/>
+<div id="loadListHere"></div>
+
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+<script>
+    
+    $(document).ready( function () {
+        loadListOfMembers();
+    });
+
+    //loads the list of all the members
+    function loadListOfMembers() {
+        $.get('ListOfMembers', null, function (data) {
+            $('#loadListHere').html(data);
+        });
+    }
+
+    //deletes the selected member
+    function deleteMember(id) {
+        $.post('Delete/' + id, null, function (data) {
+            loadListOfMembers();
+            alert(data);
+        });
+    };
+
+    //Populate the edit form on clicking edit button
+    function populateAddForm(id, name, age) {
+        $('#ID').val(id);
+        $('#Name').val(name);
+        $('#age').val(age);
+    }
+
+    //adds or edit member
+    function Add() {
+        $.post('Save', $('#MyForm').serializeArray(), function (data) {
+            CleanFields();
+            loadListOfMembers();
+            alert(data);
+        });
+    }
+
+    //cleans the input fields 
+    function CleanFields() {
+        $('#ID').val('');
+        $('#Name').val('');
+        $('#age').val('');
+    }
+
+
+</script>
+
+
+

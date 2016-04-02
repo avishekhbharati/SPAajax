@@ -1,0 +1,33 @@
+﻿@model IEnumerable<SPAajax.Models.Member>
+
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.age)
+        </th>
+        <th>Action</th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.age)
+            </td>
+            <td>
+                <a href="javascript:void(0)" onclick="populateAddForm('@item.ID','@item.Name' , '@item.age')" class="btn_edit" id="@item.ID" name="">edit</a> |
+                <a href="javascript:void(0)" onclick="deleteMember(@item.ID)" class="btn_delete">delete</a>
+            </td>
+        </tr>
+    }
+
+</table>
+
+
