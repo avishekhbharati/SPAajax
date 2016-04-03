@@ -15,6 +15,15 @@ namespace SPAajax.Controllers
             return View();
         }
 
+        public JsonResult MemberListJson()
+        {
+            using (MyContext db = new MyContext())
+            {
+                var obj = db.Members.ToList();
+                return Json(obj, JsonRequestBehavior.AllowGet);
+            }
+        }
+
 
         /// <summary>
         /// Returns the partial view

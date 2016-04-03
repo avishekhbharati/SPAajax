@@ -13,16 +13,80 @@
 </form>
 
 <br/>
+<h3>Via Partial View</h3>
 <div id="loadListHere"></div>
-
+<hr />
 
 <script src="~/Scripts/jquery-1.10.2.min.js"></script>
 
-<script>
+
+<h3>Via Mustache js</h3>
+<div id="cnt"></div>
+
+<div id="attachHere">
     
+</div>
+
+
+<script id="myTemplate" type="text/template">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th><th>Age</th><th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#data2}}
+            <tr>
+                <td>{{Name}}</td>
+                <td>{{age}}</td>
+                <td>
+                    <a href="#" onclick="populateAddForm('{{ID}}', '{{Name}}', '{{age}}' )">Edit</a> |
+                    <a href="#" onclick="deleteMember({{ID}})">Delete</a>
+                </td>
+            </tr>
+            {{/data2}}
+        </tbody>        
+    </table>
+</script>
+
+
+<script src="~/Scripts/mustache.js-master/mustache.min.js"></script>
+
+<script>
+
     $(document).ready( function () {
         loadListOfMembers();
+        RenderTable();
+        // MustachRendering();
     });
+
+
+
+    function RenderTable() {
+        var template = $("#myTemplate").html();
+        $.get('MemberListJson', null, function (data) {
+            var obj = { data2: data };
+            var html = Mustache.to_html(template, obj);
+            // $(html).appendTo("#attachHere");
+            $("#attachHere").html(html);
+
+        });
+    }
+
+/*
+    function MustachRendering() {
+        var template = "<li>{{Name}}</li>";
+
+        $.get('MemberListJson', null, function(data) {
+            for (var i = 0, member; (member = data[i]) ; ++i) {
+                var html = Mustache.to_html(template, member);
+                $(html).appendTo("#cnt");
+               // alert();
+            }
+        });
+    }*/
+
 
     //loads the list of all the members
     function loadListOfMembers() {
@@ -35,6 +99,7 @@
     function deleteMember(id) {
         $.post('Delete/' + id, null, function (data) {
             loadListOfMembers();
+            RenderTable();
             alert(data);
         });
     };
@@ -51,6 +116,7 @@
         $.post('Save', $('#MyForm').serializeArray(), function (data) {
             CleanFields();
             loadListOfMembers();
+            RenderTable();
             alert(data);
         });
     }
